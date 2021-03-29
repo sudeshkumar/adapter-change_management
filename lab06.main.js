@@ -186,28 +186,7 @@ class ServiceNowAdapter extends EventEmitter {
      * Note how the object was instantiated in the constructor().
      * get() takes a callback function.
      */
-     this.connector.get((data, error) => {
-         if (error) {
-             console.log(error);
-         } else {
-            if ('body' in data) {
-                let convertedJson = JSON.parse(data.body);
-                let resultRecords = convertedJson['result'];
-                let requiredFields = ['number', 'active', 'priority', 'description', 'work_start', 'work_end', 'sys_id']
-                for (let result of resultRecords) {
-                    for (let field in result)
-                        if (!requiredFields.includes(field))
-                            delete result[field];
-                    result['change_ticket_number'] = result['number'];
-                    result['change_ticket_key'] = result['sys_id'];
-                    delete result['number'];
-                    delete result['sys_id'];
-                }
-                data = resultRecords;
-            }
-         }
-         return callback(data, error);
-     });
+     this.connector.get(callback);
   }
 
   /**
@@ -226,28 +205,7 @@ class ServiceNowAdapter extends EventEmitter {
      * Note how the object was instantiated in the constructor().
      * post() takes a callback function.
      */
-     this.connector.post((data, error) => {
-         if (error) {
-             console.log(error);
-         } else {
-            if ('body' in data) {
-                let convertedJson = JSON.parse(data.body);
-                let resultRecord = convertedJson['result'];
-                let requiredFields = ['number', 'active', 'priority', 'description', 'work_start', 'work_end', 'sys_id']
-
-                for (let field in resultRecord)
-                    if (!requiredFields.includes(field))
-                        delete resultRecord[field];
-                resultRecord['change_ticket_number'] = resultRecord['number'];
-                resultRecord['change_ticket_key'] = resultRecord['sys_id'];
-                delete resultRecord['number'];
-                delete resultRecord['sys_id'];
-
-                data = resultRecord;
-            }
-         }
-         return callback(data, error);
-     });
+     this.connector.post(callback);
   }
 }
 
